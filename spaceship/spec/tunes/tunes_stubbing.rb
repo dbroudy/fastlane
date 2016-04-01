@@ -63,6 +63,10 @@ def itc_stub_applications
 
   stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/versions/814624685/stateHistory?platform=ios").
     to_return(status: 200, body: itc_read_fixture_file('app_version_states_history.json'), headers: { 'Content-Type' => 'application/json' })
+
+  # IAP product list
+  stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/addons").
+    to_return(status: 200, body: itc_read_fixture_file('app_addons.json'), headers: { 'Content-Type' => 'application/json' })
 end
 
 def itc_stub_build_details

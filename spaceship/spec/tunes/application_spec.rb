@@ -237,6 +237,14 @@ describe Spaceship::Application do
       end
     end
 
+    describe "IAP products" do
+      it "Parses IAP product list (addons)" do
+        app = Spaceship::Application.all.first
+        products = app.addons
+        expect(products.count).to eq(2)
+      end
+    end
+
     describe "Promo codes" do
       let(:app) { Spaceship::Application.all.first }
 

@@ -1,0 +1,62 @@
+{
+   "data" : [
+      {
+         "referenceName" : "Non consumable 1",
+         "durationDays" : 0,
+         "addOnType" : "ITC.addons.type.nonConsumable",
+         "itcsubmitNextVersion" : false,
+         "lastModifiedDate" : 1458842998856,
+         "vendorId" : "com.example.non-consumable.sku-1",
+         "isRequired" : false,
+         "versions" : [
+            {
+               "itunesConnectStatus" : "readyToSubmit",
+               "canSubmit" : true,
+               "screenshotUrl": "https://is3-ssl.mzstatic.com/image/thumb/Purple3/v4/42/45/f2/4245f2ee-3a37-a34d-a659-1f5f403ab2fe/pr_source.png/500x500bb-80.png",
+               "issuesCount" : 0
+            }
+         ],
+         "isEditable" : false,
+         "adamId" : 1010101010,
+         "isEmptyValue" : false,
+         "canDeleteAddOn" : true,
+         "iTunesConnectStatus" : "readyToSubmit",
+         "errorKeys" : null,
+         "purpleSoftwareAdamIds" : [
+            1234567890
+         ]
+      },
+      {
+         "purpleSoftwareAdamIds" : [
+            1234567890
+         ],
+         "iTunesConnectStatus" : "pendingScreenshot",
+         "errorKeys" : null,
+         "canDeleteAddOn" : true,
+         "isEmptyValue" : false,
+         "adamId" : 2020202020,
+         "isEditable" : false,
+         "versions" : [
+            {
+               "issuesCount" : 0,
+               "screenshotUrl" : null,
+               "itunesConnectStatus" : "pendingScreenshot",
+               "canSubmit" : false
+            }
+         ],
+         "vendorId" : "com.example.non-consumable.sku-2",
+         "isRequired" : false,
+         "itcsubmitNextVersion" : false,
+         "lastModifiedDate" : 1458842998843,
+         "addOnType" : "ITC.addons.type.nonConsumable",
+         "durationDays" : 0,
+         "referenceName" : "Non consumable 2"
+      }
+   ],
+   "messages" : {
+      "error" : null,
+      "info" : null,
+      "warn" : null
+   },
+   "statusCode" : "SUCCESS"
+}

@@ -820,6 +820,14 @@ module Spaceship
     end
 
     #####################################################
+    # @!group IAP products
+    #####################################################
+    def addons(app_id)
+      r = request(:get, "ra/apps/#{app_id}/addons")
+      parse_response(r, 'data')
+    end
+
+    #####################################################
     # @!group Promo codes
     #####################################################
     def app_promocodes(app_id: nil)
