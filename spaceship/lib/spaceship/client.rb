@@ -251,12 +251,32 @@ module Spaceship
       }
 
       begin
+        # The below workaround is only needed for 2 step verified machines
+        # Due to escaping of cookie values we have a little workaround here
+        # By default the cookie jar would generate the following header
+        #   DES5c148...=HSARM.......xaA/O69Ws/CHfQ==SRVT
+        # However we need the following
+        #   DES5c148...="HSARM.......xaA/O69Ws/CHfQ==SRVT"
+        # There is no way to get the cookie jar value with " around the value
+        # so we manually modify the cookie (only this one) to be properly escaped
+        # Afterwards we pass this value manually as a header
+        # It's not enough to just modify @cookie, it needs to be done after self.cookie
+        # as a string operation
+        important_cookie = @cookie.store.entries.find { |a| a.name.include?("DES") }
+        if important_cookie
+          modified_cookie = self.cookie # returns a string of all cookies
+          unescaped_important_cookie = "#{important_cookie.name}=#{important_cookie.value}"
+          escaped_important_cookie = "#{important_cookie.name}=\"#{important_cookie.value}\""
+          modified_cookie.gsub!(unescaped_important_cookie, escaped_important_cookie)
+        end
+
         response = request(:post) do |req|
           req.url "https://idmsa.apple.com/appleauth/auth/signin?widgetKey=#{itc_service_key}"
           req.body = data.to_json
           req.headers['Content-Type'] = 'application/json'
           req.headers['X-Requested-With'] = 'XMLHttpRequest'
           req.headers['Accept'] = 'application/json, text/javascript'
+          req.headers["Cookie"] = modified_cookie if modified_cookie
         end
       rescue UnauthorizedAccessError
         raise InvalidUserCredentialsError.new, "Invalid username and password combination. Used '#{user}' as the username."
@@ -282,15 +302,22 @@ module Spaceship
           raise "Looks like your Apple ID is not enabled for iTunes Connect, make sure to be able to login online"
         else
           info = [response.body, response['Set-Cookie']]
-          raise ITunesConnectError.new, info.join("\n")
+          raise TunesClient::ITunesConnectError.new, info.join("\n")
         end
       end
     end
 
     def itc_service_key
       return @service_key if @service_key
+      # Some customers in Asia have had trouble with the CDNs there that cache and serve this content, leading
+      # to "buffer error (Zlib::BufError)" from deep in the Ruby HTTP stack. Setting this header requests that
+      # the content be served only as plain-text, which seems to work around their problem, while not affecting
+      # other clients.
+      #
+      # https://github.com/fastlane/fastlane/issues/4610
+      headers = {'Accept-Encoding' => 'identity'}
       # We need a service key from a JS file to properly auth
-      js = request(:get, "https://itunesconnect.apple.com/itc/static-resources/controllers/login_cntrl.js")
+      js = request(:get, "https://itunesconnect.apple.com/itc/static-resources/controllers/login_cntrl.js", nil, headers)
       @service_key ||= js.body.match(/itcServiceKey = '(.*)'/)[1]
     end
 

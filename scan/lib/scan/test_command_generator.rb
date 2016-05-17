@@ -37,6 +37,7 @@ module Scan
         options << "-derivedDataPath '#{config[:derived_data_path]}'" if config[:derived_data_path]
         options << "-resultBundlePath '#{result_bundle_path}'" if config[:result_bundle]
         options << "-enableCodeCoverage YES" if config[:code_coverage]
+        options << "-enableAddressSanitizer YES" if config[:address_sanitizer]
         options << "-xcconfig '#{config[:xcconfig]}'" if config[:xcconfig]
         options << config[:xcargs] if config[:xcargs]
 
@@ -63,7 +64,9 @@ module Scan
         # During building we just show the output in the terminal
         # Check out the ReportCollector class for more xcpretty things
         formatter = []
-        if ENV.key?("TRAVIS")
+        if Scan.config[:formatter]
+          formatter << "-f `#{Scan.config[:formatter]}`"
+        elsif ENV.key?("TRAVIS")
           formatter << "-f `xcpretty-travis-formatter`"
           UI.success("Automatically switched to Travis formatter")
         end
