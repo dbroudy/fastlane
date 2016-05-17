@@ -839,6 +839,14 @@ module Spaceship
       parse_response(r, 'data')
     end
 
+    def delete_addon!(addon)
+      url = "ra/addons/delete/#{addon.addon_id}"
+      r = request(:post) do |req|
+        req.url url
+      end
+      parse_response(r)
+    end
+
     #####################################################
     # @!group Promo codes
     #####################################################
